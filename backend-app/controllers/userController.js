@@ -1,17 +1,25 @@
-const User = require('../models/User');
-
 exports.getUser = async (req, res) => {
   try {
-    // Ensure you're looking up by the correct ID
-    const user = await User.findById(req.user.userId).select('-password'); // Exclude password field
-    // console.log("Decoded User ID:", req.user);
-    
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+    if (!req.user) {
+      return res.status(404).json({
+        statusCode: 404,
+        success: false,
+        message: 'User not found',
+      });
     }
-    res.json(user);  // Return user data excluding the password
-  } catch (err) {
-    console.error(err); // Log any errors for debugging
-    res.status(500).send('Server Error');
+
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: 'User retrieved successfully',
+      data: req.user, // `req.user` is set in authMiddleware
+    });
+  } catch (error) {
+    return res.status(500).json({
+      statusCode: 500,
+      success: false,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
   }
 };

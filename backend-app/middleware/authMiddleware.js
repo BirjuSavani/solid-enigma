@@ -1,17 +1,37 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
+const authMiddleware = async (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1]; // ✅ Extract Bearer token
+
   if (!token) {
-    return res.status(401).json({ msg: 'No token, authorization denied' });
+    return res.status(401).json({
+      statusCode: 401,
+      success: false,
+      message: 'Unauthorized access',
+      error: 'Token is missing',
+    });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Decode the token
-    req.user = decoded;  // Attach the decoded token payload to `req.user`
-    next();
-  } catch (err) {
-    res.status(401).json({ msg: 'Token is not valid' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // ✅ Verify JWT
+    req.user = await User.findById(decoded.userId).select('-password'); // ✅ Fetch user, exclude password
+    
+    if (!req.user) {
+      return res.status(404).json({
+        statusCode: 404,
+        success: false,
+        message: 'User not found',
+      });
+    }
+    next(); // ✅ Proceed to the next middleware/controller
+  } catch (error) {
+    return res.status(401).json({
+      statusCode: 401,
+      success: false,
+      message: 'Unauthorized access',
+      error: 'Invalid or expired token',
+    });
   }
 };
 
