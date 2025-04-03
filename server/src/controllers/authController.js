@@ -15,7 +15,7 @@ exports.registerUser = async (req, res) => {
     });
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password, phone } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -29,14 +29,14 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    user = new User({ name, email, password: hashedPassword });
+    user = new User({ name, email, password: hashedPassword, phone });
     await user.save();
 
     return res.status(201).json({
       statusCode: 201,
       success: true,
       message: 'User registered successfully',
-      data: { id: user.id, name: user.name, email: user.email },
+      data: { id: user.id, name: user.name, email: user.email, phone: user.phone },
     });
   } catch (error) {
     return res.status(500).json({
