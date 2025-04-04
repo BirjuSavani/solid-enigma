@@ -25,7 +25,7 @@ function Login() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const response = await login(data);
       showSuccess(response.data.message || 'Login successful');
