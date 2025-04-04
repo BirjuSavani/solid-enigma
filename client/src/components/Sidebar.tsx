@@ -7,7 +7,7 @@ function Sidebar() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
-    navigate('/');
+    navigate('/', { replace: true });
   };
 
   return (

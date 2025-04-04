@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
-import { register } from '../service/Api';
+import { register } from '../service/authService';
 import { showError, showSuccess } from '../utils/toast';
 
 interface RegisterData {

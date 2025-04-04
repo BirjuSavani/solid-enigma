@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
-import { login } from '../service/Api';
 import { showError, showSuccess } from '../utils/toast';
+import { login } from '../service/authService';
 
 interface LoginData {
   email: string;
@@ -25,7 +25,7 @@ function Login() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const response = await login(data);
       showSuccess(response.data.message || 'Login successful');

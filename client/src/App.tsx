@@ -7,9 +7,9 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
 import Users from './pages/users/Users';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
-  const token = sessionStorage.getItem('token');
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -19,11 +19,13 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Dashboard with Nested Routes */}
-          <Route path="/dashboard" element={token ? <Dashboard /> : <Dashboard />}>
-            <Route index element={<h2 className="h4 mb-4 text-center mt-4 text-dark">Welcome to SOLID ENIGMA</h2>} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="users" element={<Users />} />
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route index element={<h2 className="h4 mb-4 text-center mt-4 text-dark">Welcome to SOLID ENIGMA</h2>} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="users" element={<Users />} />
+            </Route>
           </Route>
         </Routes>
       </Router>
