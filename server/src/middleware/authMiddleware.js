@@ -10,6 +10,7 @@ const authMiddleware = async (req, res, next) => {
         statusCode: 401,
         success: false,
         message: 'Unauthorized access',
+        data: null,
         error: 'Invalid token format. Use "Bearer <token>"',
       });
     }
@@ -24,6 +25,8 @@ const authMiddleware = async (req, res, next) => {
         statusCode: 404,
         success: false,
         message: 'User not found',
+        data: null,
+        error: 'User not found',
       });
     }
 
