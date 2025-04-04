@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 const healthRoutes = require('./routes/healthRoutes');
 // const userManagementRoutes = require('./routes/userManagementRoutes');
 
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/user', profileRoutes);
 app.use('/api/health', healthRoutes);
 // app.use('/api/user-management', userManagementRoutes);
 

@@ -1,43 +1,31 @@
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
 
-exports.getUser = async (req, res) => {
+exports.getProfile = async (req, res) => {
   try {
-    if (!req.user) {
-      return res.status(404).json({
-        statusCode: 404,
-        success: false,
-        message: 'User not found',
-      });
-    }
+    const userData = await User.findById(req.user._id).select('-password');
 
     return res.status(200).json({
       statusCode: 200,
       success: true,
       message: 'User retrieved successfully',
-      data: req.user, // `req.user` is set in authMiddleware
+      data: userData,
+      error: null,
     });
   } catch (error) {
     return res.status(500).json({
       statusCode: 500,
       success: false,
       message: 'Internal Server Error',
+      data: null,
       error: error.message,
     });
   }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateProfile = async (req, res) => {
   try {
     console.log('User before update:', req.user); // Debugging
-
-    if (!req.user) {
-      return res.status(404).json({
-        statusCode: 404,
-        success: false,
-        message: 'User not found',
-      });
-    }
 
     const { name, email, phone } = req.body;
 
@@ -52,6 +40,8 @@ exports.updateUser = async (req, res) => {
         statusCode: 404,
         success: false,
         message: 'Failed to update user',
+        data: null,
+        error: 'Failed to update user',
       });
     }
 
@@ -62,6 +52,7 @@ exports.updateUser = async (req, res) => {
       success: true,
       message: 'User updated successfully',
       data: updatedUser,
+      error: null,
     });
   } catch (error) {
     console.error('Update Error:', error); // Debugging
@@ -69,32 +60,29 @@ exports.updateUser = async (req, res) => {
       statusCode: 500,
       success: false,
       message: 'Internal Server Error',
+      data: null,
       error: error.message,
     });
   }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteProfile = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.user.id);
-    if (!user) {
-      return res.status(404).json({
-        statusCode: 404,
-        success: false,
-        message: 'User not found',
-      });
-    }
 
     return res.status(200).json({
       statusCode: 200,
       success: true,
       message: 'User profile deleted successfully',
+      data: null,
+      error: null,
     });
   } catch (error) {
     return res.status(500).json({
       statusCode: 500,
       success: false,
       message: 'Internal Server Error',
+      data: null,
       error: error.message,
     });
   }
