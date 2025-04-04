@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaEdit, FaSave, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
-import { profile, profileDelete, profileUpdate } from '../service/Api';
+import { deleteProfile, getProfile, updateProfile } from '../service/profileService';
 import { showError, showSuccess } from '../utils/toast';
 
 interface UserProfile {
@@ -23,13 +23,14 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await profile();
+        const response = await getProfile();
         if (response.data.success && response.data.data) {
           setUser(response.data.data);
           setEditedUser(response.data.data);
         } else {
           showError('Failed to retrieve user data');
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         showError(error.message);
       } finally {
@@ -53,7 +54,13 @@ const Profile = () => {
   const handleSaveClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const response = await profileUpdate(editedUser);
+      if (!editedUser) {
+        showError('User data is not available');
+        return;
+      }
+
+      const response = await updateProfile(editedUser);
+
       if (response.data.success) {
         setUser(response.data.data);
         setEditedUser(response.data.data);
@@ -62,6 +69,7 @@ const Profile = () => {
       } else {
         showError(response.data.message || 'Failed to update profile');
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       showError(error.message || 'An unexpected error occurred');
     }
@@ -69,7 +77,7 @@ const Profile = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await profileDelete();
+      const response = await deleteProfile();
       if (response.data.success) {
         sessionStorage.removeItem('token');
         showSuccess(response.data.message || 'Profile deleted successfully');
@@ -77,6 +85,7 @@ const Profile = () => {
       } else {
         showError(response.data.message || 'Failed to delete profile');
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       showError(error.message || 'An unexpected error occurred');
     }

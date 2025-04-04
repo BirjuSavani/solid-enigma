@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { profile } from '../service/Api';
 import { UserProfile } from '../service/interface/Interface';
+import { getProfile } from '../service/profileService';
 import { showError } from '../utils/toast';
 
 function Header() {
   const [user, setUser] = useState<UserProfile | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await profile();
+        const response = await getProfile();
         if (response.data.success && response.data.data) {
           setUser(response.data.data);
         } else {
