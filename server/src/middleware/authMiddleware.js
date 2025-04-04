@@ -28,7 +28,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
-    next(); // Proceed to the next middleware or controller
+    next();
   } catch (error) {
     let errorMessage = 'Invalid or expired token';
     let statusCode = 401;
